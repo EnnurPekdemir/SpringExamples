@@ -1,0 +1,17 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-server
+    restart: always
+    ports:
+      - "5672:5672"    # AMQP protokol portu (Spring Boot baglantisi)
+      - "15672:15672"  # RabbitMQ Management Web Arayuzu
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+volumes:
+  rabbitmq_data:
+    driver: local
