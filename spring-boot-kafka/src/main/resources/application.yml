@@ -1,0 +1,20 @@
+server:
+  port: 8080
+
+hk:
+  kafka:
+    topic: hk-topic
+
+spring:
+  application:
+    name: spring-boot-kafka
+  kafka:
+    bootstrap-servers: 127.0.0.1:9092
+    consumer:
+      group-id: hk-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
