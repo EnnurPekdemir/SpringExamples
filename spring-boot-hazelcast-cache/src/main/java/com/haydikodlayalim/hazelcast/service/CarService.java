@@ -21,11 +21,21 @@ public class CarService {
 
     @PostConstruct
     public void init() {
-        if (carRepository.count() == 0) {
-            carRepository.save(Car.builder().model("M3").brand("BMW").year(2023).build());
-            carRepository.save(Car.builder().model("Civic").brand("Honda").year(2022).build());
-            carRepository.save(Car.builder().model("Corolla").brand("Toyota").year(2024).build());
-            log.info("--> PostgreSQL veritabanina ornek araclar eklendi.");
+        if (carRepository.count() < 500) {
+            carRepository.deleteAll();
+            String[] brands = {"BMW", "Mercedes", "Audi", "Toyota", "Honda", "Volkswagen", "Ford", "Volvo"};
+            String[] models = {"Model X", "Model Y", "Sedan", "Hatchback", "SUV", "Coupe", "Sport", "Touring"};
+
+            log.info("--> Test verileri veritabanina ekleniyor (500 adet arac)...");
+            for (int i = 1; i <= 500; i++) {
+                Car car = Car.builder()
+                        .brand(brands[i % brands.length])
+                        .model(models[i % models.length] + " #" + i)
+                        .year(2000 + (i % 25))
+                        .build();
+                carRepository.save(car);
+            }
+            log.info("--> 500 adet ornek arac basariyla PostgreSQL veritabanina kaydedildi.");
         }
     }
 
@@ -33,7 +43,6 @@ public class CarService {
     @Cacheable(value = "cars-cache", key = "#id")
     public Car getCarById(Long id) {
         log.info("--> [POSTGRESQL DB SORGUSU] id: {} icin veritabanina gidiliyor...", id);
-        simulateSlowDatabaseCall();
         return carRepository.findById(id)
                 .orElse(Car.builder().id(id).model("Bilinmeyen").brand("Bilinmeyen").year(2000).build());
     }
@@ -45,23 +54,17 @@ public class CarService {
         return carRepository.save(car);
     }
 
-    // 3. Butun araclari listeler
+    // 3. Butun araclari listeler (Hazelcast cache uzerinden saklanir)
+    @Cacheable(value = "all-cars-cache")
     public List<Car> getAllCars() {
+        log.info("--> [POSTGRESQL DB SORGUSU] Tum araclar veritabanindan cekiliyor (findAll)...");
         return carRepository.findAll();
     }
 
     // 4. Cache'i temizler
-    @CacheEvict(value = "cars-cache", allEntries = true)
+    @CacheEvict(value = {"cars-cache", "all-cars-cache"}, allEntries = true)
     public String clearCache() {
-        log.info("--> Hazelcast 'cars-cache' tamamen temizlendi!");
+        log.info("--> Hazelcast onbellekleri ('cars-cache', 'all-cars-cache') tamamen temizlendi!");
         return "Hazelcast onbellek basariyla temizlendi.";
-    }
-
-    private void simulateSlowDatabaseCall() {
-        try {
-            Thread.sleep(1500); // 1.5 saniye DB gecikmesi simülasyonu
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }

@@ -20,7 +20,7 @@ public class HazelcastConfiguration {
 
         MapConfig mapConfig = new MapConfig();
         mapConfig.setName("cars-cache");
-        mapConfig.setTimeToLiveSeconds(300); // 5 dakika sonra cache temizlensin
+        mapConfig.setTimeToLiveSeconds(300);
         mapConfig.setEvictionConfig(new EvictionConfig()
                 .setEvictionPolicy(EvictionPolicy.LRU)
                 .setMaxSizePolicy(MaxSizePolicy.PER_NODE)

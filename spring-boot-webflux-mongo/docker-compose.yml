@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  mongo-webflux:
+    image: mongo:6.0
+    container_name: mongo-webflux
+    restart: always
+    ports:
+      - "27017:27017"
