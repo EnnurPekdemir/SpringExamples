@@ -33,7 +33,11 @@ A collection of hands-on Spring Boot modules covering common backend patterns, d
 - **`spring-boot-gridfs-fileupload`**: File upload and binary storage using MongoDB GridFS.
 - **`spring-elasticsearch`**: Full-text search and document indexing using Elasticsearch.
 
-### 4. REST API & Architecture
+### 4. Security & Authentication
+- **`spring-boot-jwt`**: Stateless authentication and authorization using Spring Security 6 and JSON Web Tokens (JJWT). Includes token generation, validation filter, and role-based endpoint protection.
+- **`spring-security-facebook-login`**: OAuth 2.0 social login integration with Facebook and Spring Security 6 (`spring-boot-starter-oauth2-client`). Features profile retrieval via `@AuthenticationPrincipal` and customized security filter chain.
+
+### 5. REST API & Architecture
 - **`spring-boot-versioning`**: 4 different REST API versioning strategies:
   - URI Path (`/api/v1/product`)
   - Request Parameter (`?apiVersion=1`)
